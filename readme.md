@@ -1,58 +1,155 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Laravel 5.5 Testing With Example
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+### PHPUnit Environment
+When we are running the tests via phpunit then Laravel will set the environment to test automatically.  It configures the cache and session environment to the array driver. So while testing, no session or cache data is persisted. You can actually see it in below code. Go to phpunit.xml file.
 
-## About Laravel
+```xml
+<php>
+     <env name="APP_ENV" value="testing"/>
+     <env name="CACHE_DRIVER" value="array"/>
+     <env name="SESSION_DRIVER" value="array"/>
+     <env name="QUEUE_DRIVER" value="sync"/>
+</php>
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+Laravel 5.5 Testing: Creating and Running Tests
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+>The first step would be to install brand new Laravel 5.5 Project.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+# Step 1: Install Laravel 5.5 Testing Project
 
-## Learning Laravel
+```
+composer create-project laravel/laravel laraveltesting --prefer-dist
+```
+```
+php artisan migrate
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+>Now, for testing, we will create another model and migration file. So type the following command.
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+```
+php artisan make:model Stock -m
+```
 
-## Laravel Sponsors
+>It will create stocks table also and we need to define the schema for it.
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+```
+<?php
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Pulse Storm](http://www.pulsestorm.net/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
+// create_stocks_table
 
-## Contributing
+  /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('stocks', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->integer('price');
+            $table->timestamps();
+        });
+    }
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+php artisan migrate
+```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Step 2: Mass assignment exception
 
-## License
+In model Stock.php file, add the following property in it.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+protected $fillable = ['name','price'];
+```
+
+# Step 3: Make the test file.
+
+To make a test file, there is an artisan command for it, so type in the terminal,
+
+```
+php artisan make:test StockTest
+```
+
+>This will create feature test file inside tests  >>  Feature  >>  StockTest file.
+
+>Now, the file will look like this.
+
+```
+<?php
+
+// StockTest.php 
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class StockTest extends TestCase
+{
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testExample()
+    {
+        $this->assertTrue(true);
+    }
+}
+```
+
+Next step would be to write one simple test in the testExample() function.
+
+```
+<?php
+
+// StockTest.php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Stock;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class StockTest extends TestCase
+{
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testExample()
+    {
+      $stock = new Stock(['name'=>'Tesla']);
+      $this->assertEquals('Tesla', $stock->name);
+    }
+}
+```
+
+Here, I have included our model Stock.php in the StockTest.php file and created an object and try to insert one stock in the array. Remeber by default we are using array drivers. If I have not included the model correctly or I have not added the fillable property in the model then this test will fail otherwise It will pass the test.
+
+# Step 4: Run the test.
+
+Please type the following command to run the test.
+
+```
+phpunit
+```
+
+>Note: If this will throw an error then please run following command.
+
+```
+vendor/bin/phpunit
+```
+
+or
+
+```
+vendor\bin\phpunit
+```
+One of this options will definitely run your tests.
