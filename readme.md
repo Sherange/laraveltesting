@@ -1,14 +1,16 @@
-Laravel 5.5 Testing With Example
+#Laravel 5.5 Testing With Example
 
-PHPUnit Environment
+###PHPUnit Environment
 When we are running the tests via phpunit then Laravel will set the environment to test automatically.  It configures the cache and session environment to the array driver. So while testing, no session or cache data is persisted. You can actually see it in below code. Go to phpunit.xml file.
 
+```xml
 <php>
      <env name="APP_ENV" value="testing"/>
      <env name="CACHE_DRIVER" value="array"/>
      <env name="SESSION_DRIVER" value="array"/>
      <env name="QUEUE_DRIVER" value="sync"/>
 </php>
+```
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
