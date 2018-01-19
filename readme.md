@@ -102,3 +102,54 @@ class StockTest extends TestCase
     }
 }
 ```
+
+Next step would be to write one simple test in the testExample() function.
+
+```
+<?php
+
+// StockTest.php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Stock;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class StockTest extends TestCase
+{
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testExample()
+    {
+      $stock = new Stock(['name'=>'Tesla']);
+      $this->assertEquals('Tesla', $stock->name);
+    }
+}
+```
+
+Here, I have included our model Stock.php in the StockTest.php file and created an object and try to insert one stock in the array. Remeber by default we are using array drivers. If I have not included the model correctly or I have not added the fillable property in the model then this test will fail otherwise It will pass the test.
+
+# Step 4: Run the test.
+
+Please type the following command to run the test.
+
+```
+phpunit
+```
+
+>Note: If this will throw an error then please run following command.
+
+```
+vendor/bin/phpunit
+```
+
+or
+
+```
+vendor\bin\phpunit
+```
+One of this options will definitely run your tests.
