@@ -1,6 +1,6 @@
-#Laravel 5.5 Testing With Example
+# Laravel 5.5 Testing With Example
 
-###PHPUnit Environment
+### PHPUnit Environment
 When we are running the tests via phpunit then Laravel will set the environment to test automatically.  It configures the cache and session environment to the array driver. So while testing, no session or cache data is persisted. You can actually see it in below code. Go to phpunit.xml file.
 
 ```xml
@@ -12,28 +12,28 @@ When we are running the tests via phpunit then Laravel will set the environment 
 </php>
 ```
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 Laravel 5.5 Testing: Creating and Running Tests
 
-The first step would be to install brand new Laravel 5.5 Project.
+>The first step would be to install brand new Laravel 5.5 Project.
 
-Step 1: Install Laravel 5.5 Testing Project
+# Step 1: Install Laravel 5.5 Testing Project
 
-####################################################################################################################################################################################################################
-
+```
 composer create-project laravel/laravel laraveltesting --prefer-dist
+```
+```
 php artisan migrate
+```
 
+>Now, for testing, we will create another model and migration file. So type the following command.
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-Now, for testing, we will create another model and migration file. So type the following command.
-
+```
 php artisan make:model Stock -m
+```
 
-It will create stocks table also and we need to define the schema for it.
+>It will create stocks table also and we need to define the schema for it.
 
+```
 <?php
 
 // create_stocks_table
@@ -52,29 +52,34 @@ It will create stocks table also and we need to define the schema for it.
             $table->timestamps();
         });
     }
+```
 
+```
 php artisan migrate
+```
 
-####################################################################################################################################################################################################################
 
-Step 2: Mass assignment exception
+# Step 2: Mass assignment exception
 
 In model Stock.php file, add the following property in it.
 
+```
 protected $fillable = ['name','price'];
+```
 
-####################################################################################################################################################################################################################
-
-Step 3: Make the test file.
+# Step 3: Make the test file.
 
 To make a test file, there is an artisan command for it, so type in the terminal,
 
+```
 php artisan make:test StockTest
+```
 
-This will create feature test file inside tests  >>  Feature  >>  StockTest file.
+>This will create feature test file inside tests  >>  Feature  >>  StockTest file.
 
-Now, the file will look like this.
+>Now, the file will look like this.
 
+```
 <?php
 
 // StockTest.php 
@@ -96,3 +101,4 @@ class StockTest extends TestCase
         $this->assertTrue(true);
     }
 }
+```
